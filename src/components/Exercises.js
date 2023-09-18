@@ -6,7 +6,10 @@ import ExerciseCard from "./ExerciseCard";
 
 function Exercises({ bodyPart, exercises, setExercises }) {
   const [currentPage, setCurrentPage] = useState(1);
-  const exercisePerPage = 9;
+  let exercisePerPage = 9;
+  if (!bodyPart) {
+    exercisePerPage = 3;
+  }
 
   const indexOfLastExercise = currentPage * exercisePerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisePerPage;
@@ -17,8 +20,9 @@ function Exercises({ bodyPart, exercises, setExercises }) {
   useEffect(() => {
     const fetchExercisesData = async () => {
       let exercisesData = [];
-
-      if (bodyPart == "all") {
+      if (!bodyPart) {
+        setExercises(exercises);
+      } else if (bodyPart == "all") {
         exercisesData = await fetchData(
           "https://exercisedb.p.rapidapi.com/exercises",
           exerciseOptions
@@ -39,9 +43,12 @@ function Exercises({ bodyPart, exercises, setExercises }) {
   };
   return (
     <Box id="excercies" mx={{ mt: { lg: "110px" } }}>
-      <Typography variant="h3" mb="46px">
-        Showing Results
-      </Typography>
+      {bodyPart && (
+        <Typography variant="h3" mb="46px">
+          Showing Results
+        </Typography>
+      )}
+
       <Stack
         direction="row"
         sx={{ gap: { lg: "110px", xs: "50px" } }}
